@@ -22,9 +22,6 @@ Crisis-Resistant Stocks Finder - A web application that helps investors identify
 - Modern web browser (Chrome, Firefox, Safari, Edge)
 - Alpha Vantage API key (free tier available)
 
-###WEBSITE
-https://crisis-resistant-stocks-finder.vercel.app/
-
 ### Installation
 
 1. Clone the repository:
