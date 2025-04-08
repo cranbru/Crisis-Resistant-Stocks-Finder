@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Crisis-Resistant Stocks Finder</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 1rem 0;
+    }
+    .error {
+      color: red;
+      display: none;
+      text-align: center;
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Crisis-Resistant Stocks Finder</h2>
+
+    <!-- Loading and error states -->
+    <div id="loading" class="loading">Loading...</div>
+    <div id="error" class="error"></div>
+
+    <!-- Stock symbol input to fetch data -->
+    <label>Enter Stock Symbol (e.g., AAPL):</label>
+    <input type="text" id="stock-symbol" placeholder="Enter symbol like AAPL or INFY">
+    <button id="fetch-stock">Fetch Stock Data</button>
+
+    <!-- Inputs for evaluation -->
+    <label>Piotroski Score (0-9):</label>
+    <input type="number" id="piotroski" min="0" max="9">
+
+    <label>Altman Z-Score:</label>
+    <input type="number" id="altman" step="0.1">
+
+    <label>Beta (Volatility):</label>
+    <input type="number" id="beta" step="0.01">
+
+    <label>Free Cash Flow (in millions):</label>
+    <input type="number" id="fcf" step="0.1">
+
+    <label>Debt-to-Equity Ratio:</label>
+    <input type="number" id="debt" step="0.01">
+
+    <button id="evaluate">Check Resilience</button>
+
+    <div class="result" id="result"></div>
+
+    <div class="resources">
+      <p><strong>Where to find these values manually:</strong></p>
+      <ul>
+        <li><a href="https://www.screener.in/" target="_blank">Screener.in</a></li>
+        <li><a href="https://www.tickertape.in/" target="_blank">Tickertape</a></li>
+        <li><a href="https://finance.yahoo.com/" target="_blank">Yahoo Finance</a></li>
+      </ul>
+    </div>
+
+    <footer class="footer">
+      <div class="attribution">
+        <p>Made with ❤️ by Abhinav Gupta</p>
+        <div class="social-links">
+          <a href="https://www.linkedin.com/in/abhinav-gupta-772972322/" target="_blank" rel="noopener noreferrer">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn" width="24" height="24">
+          </a>
+          <a href="https://github.com/cranbru" target="_blank" rel="noopener noreferrer">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" width="24" height="24">
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <style>
+      .footer {
+        margin-top: 2rem;
+        padding: 1rem;
+        text-align: center;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .attribution {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+      }
+
+      .social-links a {
+        transition: transform 0.2s;
+      }
+
+      .social-links a:hover {
+        transform: scale(1.1);
+      }
+
+      .social-links img {
+        filter: invert(40%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%);
+      }
+    </style>
+  </div>
+
+  <script src="stock-fetcher.js"></script>
+  <script src="stock-evaluator.js"></script>
+</body>
+</html>
