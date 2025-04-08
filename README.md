@@ -1,6 +1,8 @@
 # Crisis-Resistant Stocks Finder
 
-Crisis-Resistant Stocks Finder - A web application that helps investors identify stocks resilient to market crises like pandemics or economic downturns. Analyzes key financial metrics including Piotroski Score, Altman Z-Score, Beta, Free Cash Flow, and Debt-to-Equity Ratio to evaluate stock resilience. Built with vanilla JavaScript and uses Alpha Vantage API for real-time stock data.
+A web application that helps investors identify stocks that are likely to perform well during market crises, such as pandemics or economic downturns. The tool analyzes key financial metrics to determine a stock's resilience during turbulent market conditions.
+
+🌐 **Live Demo**: [https://crisis-resistant-stocks-finder.vercel.app/](https://crisis-resistant-stocks-finder.vercel.app/)
 
 ## 🌟 Features
 
