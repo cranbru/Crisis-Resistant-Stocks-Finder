@@ -1,112 +1,164 @@
 // stock-evaluator.js
 
-// Cache for evaluation results
-const evaluationCache = JSON.parse(localStorage.getItem('evaluationCache') || '{}');
-
-function evaluateStock() {
-    const symbol = document.getElementById("stock-symbol").value.trim().toUpperCase();
-    const piotroski = parseInt(document.getElementById("piotroski").value);
-    const altman = parseFloat(document.getElementById("altman").value);
-    const beta = parseFloat(document.getElementById("beta").value);
-    const fcf = parseFloat(document.getElementById("fcf").value);
-    const debt = parseFloat(document.getElementById("debt").value);
+// Function to evaluate stock resilience
+function evaluateStock(symbol, metrics) {
+  const { piotroski, altman, beta, fcf, debt } = metrics;
   
-    let score = 0;
-  
-    if (piotroski >= 8) score++;
-    if (altman > 3) score++;
-    if (beta < 1) score++;
-    if (fcf > 0) score++;
-    if (debt < 1) score++;
-  
-    let resultText;
-    if (score === 5) {
-      resultText = "🌟 Extremely Disaster-Proof! Strong fundamentals.";
-    } else if (score >= 3) {
-      resultText = "✅ Moderately Resilient. Decent fundamentals but could be stronger.";
-    } else {
-      resultText = "⚠️ Risky. Vulnerable during crises, proceed with caution.";
-    }
+  // Validate inputs
+  if (!validateInputs(metrics)) {
+    return null;
+  }
 
-    const result = resultText + "\nDisaster Resilience Score: " + score + "/5";
-    document.getElementById("result").innerText = result;
+  // Calculate resilience score (0-100)
+  let score = 0;
+  let reasons = [];
 
-    // Cache the evaluation result
-    if (symbol) {
-        evaluationCache[symbol] = {
-            result: result,
-            timestamp: Date.now(),
-            metrics: {
-                piotroski,
-                altman,
-                beta,
-                fcf,
-                debt,
-                score
-            }
-        };
-        localStorage.setItem('evaluationCache', JSON.stringify(evaluationCache));
-    }
+  // Piotroski Score (max 30 points)
+  if (piotroski >= 7) {
+    score += 30;
+    reasons.push("Excellent Piotroski Score (7-9) indicating strong financial health");
+  } else if (piotroski >= 5) {
+    score += 20;
+    reasons.push("Good Piotroski Score (5-6) showing moderate financial strength");
+  } else {
+    reasons.push("Low Piotroski Score (<5) suggesting potential financial weaknesses");
+  }
+
+  // Altman Z-Score (max 20 points)
+  if (altman > 3.0) {
+    score += 20;
+    reasons.push("Strong Altman Z-Score (>3.0) indicating very low bankruptcy risk");
+  } else if (altman > 1.8) {
+    score += 15;
+    reasons.push("Moderate Altman Z-Score (1.8-3.0) showing acceptable bankruptcy risk");
+  } else {
+    reasons.push("Low Altman Z-Score (<1.8) suggesting higher bankruptcy risk");
+  }
+
+  // Beta (max 15 points)
+  if (beta < 0.8) {
+    score += 15;
+    reasons.push("Low Beta (<0.8) indicating lower volatility than the market");
+  } else if (beta < 1.2) {
+    score += 10;
+    reasons.push("Moderate Beta (0.8-1.2) showing market-average volatility");
+  } else {
+    reasons.push("High Beta (>1.2) indicating higher volatility than the market");
+  }
+
+  // Free Cash Flow (max 20 points)
+  if (fcf > 1000) {
+    score += 20;
+    reasons.push("Strong Free Cash Flow (>$1B) providing financial flexibility");
+  } else if (fcf > 0) {
+    score += 15;
+    reasons.push("Positive Free Cash Flow showing ability to generate cash");
+  } else {
+    reasons.push("Negative Free Cash Flow indicating potential cash flow issues");
+  }
+
+  // Debt-to-Equity Ratio (max 15 points)
+  if (debt < 0.5) {
+    score += 15;
+    reasons.push("Low Debt-to-Equity Ratio (<0.5) showing conservative leverage");
+  } else if (debt < 1.0) {
+    score += 10;
+    reasons.push("Moderate Debt-to-Equity Ratio (0.5-1.0) indicating balanced leverage");
+  } else {
+    reasons.push("High Debt-to-Equity Ratio (>1.0) suggesting aggressive leverage");
+  }
+
+  // Determine resilience level
+  let resilience;
+  if (score >= 80) {
+    resilience = "Highly Resilient";
+  } else if (score >= 60) {
+    resilience = "Moderately Resilient";
+  } else if (score >= 40) {
+    resilience = "Somewhat Resilient";
+  } else {
+    resilience = "Low Resilience";
+  }
+
+  return {
+    symbol,
+    score,
+    resilience,
+    reasons,
+    metrics
+  };
 }
 
-// Optional: Add form validation feedback
-function validateInputs() {
-    const inputs = document.querySelectorAll("input[type='number']");
-    let allValid = true;
-    inputs.forEach(input => {
-      if (!input.value || isNaN(input.value)) {
-        input.style.borderColor = 'red';
-        allValid = false;
-      } else {
-        input.style.borderColor = '#ccc';
-      }
-    });
-    return allValid;
-}
-
-// Load cached evaluation if available
-function loadCachedEvaluation(symbol) {
-    if (evaluationCache[symbol]) {
-        const cached = evaluationCache[symbol];
-        const age = Date.now() - cached.timestamp;
-        const daysOld = Math.floor(age / (1000 * 60 * 60 * 24));
-
-        if (daysOld < 7) { // Only use cache if less than 7 days old
-            document.getElementById("result").innerText = cached.result + `\n(Cached from ${daysOld} days ago)`;
-            return true;
-        }
-    }
+// Function to validate inputs
+function validateInputs(metrics) {
+  const { piotroski, altman, beta, fcf, debt } = metrics;
+  
+  if (piotroski === undefined || piotroski < 0 || piotroski > 9) {
+    showError("Please enter a valid Piotroski Score (0-9)");
     return false;
-}
+  }
   
-// Hook validation into the button
-document.addEventListener("DOMContentLoaded", () => {
-    const evaluateButton = document.getElementById("evaluate");
-    const symbolInput = document.getElementById("stock-symbol");
+  if (altman === undefined || isNaN(altman)) {
+    showError("Please enter a valid Altman Z-Score");
+    return false;
+  }
+  
+  if (beta === undefined || isNaN(beta)) {
+    showError("Please enter a valid Beta value");
+    return false;
+  }
+  
+  if (fcf === undefined || isNaN(fcf)) {
+    showError("Please enter a valid Free Cash Flow value");
+    return false;
+  }
+  
+  if (debt === undefined || isNaN(debt) || debt < 0) {
+    showError("Please enter a valid Debt-to-Equity Ratio");
+    return false;
+  }
+  
+  return true;
+}
 
-    evaluateButton.addEventListener("click", () => {
-        const symbol = symbolInput.value.trim().toUpperCase();
-        
-        // Try to load cached evaluation first
-        if (symbol && loadCachedEvaluation(symbol)) {
-            return;
-        }
+// Function to show error message
+function showError(message) {
+  const errorDiv = document.getElementById('error');
+  errorDiv.textContent = message;
+  errorDiv.style.display = 'block';
+  setTimeout(() => {
+    errorDiv.style.display = 'none';
+  }, 5000);
+}
 
-        if (validateInputs()) {
-            evaluateStock();
-        } else {
-            document.getElementById("result").innerText = "❗ Please fill in all the fields with valid numbers.";
-        }
-    });
+// Add click event listener to evaluate button
+document.getElementById('evaluate').addEventListener('click', function() {
+  const symbol = document.getElementById('stock-symbol').value.trim();
+  if (!symbol) {
+    showError('Please enter a stock symbol first');
+    return;
+  }
 
-    // Clear cache button
-    const clearCacheButton = document.createElement('button');
-    clearCacheButton.textContent = 'Clear Cache';
-    clearCacheButton.style.marginTop = '10px';
-    clearCacheButton.onclick = () => {
-        localStorage.removeItem('evaluationCache');
-        document.getElementById("result").innerText = "✅ Cache cleared successfully.";
-    };
-    document.querySelector('.result').appendChild(clearCacheButton);
+  const metrics = {
+    piotroski: parseFloat(document.getElementById('piotroski').value),
+    altman: parseFloat(document.getElementById('altman').value),
+    beta: parseFloat(document.getElementById('beta').value),
+    fcf: parseFloat(document.getElementById('fcf').value),
+    debt: parseFloat(document.getElementById('debt').value)
+  };
+
+  const result = evaluateStock(symbol, metrics);
+  
+  if (result) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = `
+      <h3>${symbol.toUpperCase()} - ${result.resilience}</h3>
+      <p>Overall Score: ${result.score}/100</p>
+      <ul>
+        ${result.reasons.map(reason => `<li>${reason}</li>`).join('')}
+      </ul>
+    `;
+    resultDiv.classList.add('highlight');
+  }
 });
   
