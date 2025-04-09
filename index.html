@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crisis-Resistant Stocks Finder</title>
   <link rel="stylesheet" href="styles.css">
   <style>
@@ -19,6 +20,7 @@
   </style>
 </head>
 <body>
+  <div class="header finisher-header"></div>
   <div class="container">
     <h2>Crisis-Resistant Stocks Finder</h2>
 
@@ -27,32 +29,80 @@
     <div id="error" class="error"></div>
 
     <!-- Stock symbol input to fetch data -->
-    <label>Enter Stock Symbol (e.g., AAPL):</label>
-    <input type="text" id="stock-symbol" placeholder="Enter symbol like AAPL or INFY">
+    <div class="input-group">
+      <label>Enter Stock Symbol (e.g., AAPL):</label>
+      <div class="input-container">
+        <input type="text" id="stock-symbol" placeholder="Enter symbol like AAPL or INFY">
+        <div class="tooltip">
+          <button class="info-button">ⓘ</button>
+          <span class="tooltiptext">Enter the stock symbol (e.g., AAPL for Apple). This will fetch the latest financial data for the company.</span>
+        </div>
+      </div>
+    </div>
     <button id="fetch-stock">Fetch Stock Data</button>
 
     <!-- Inputs for evaluation -->
-    <label>Piotroski Score (0-9):</label>
-    <input type="number" id="piotroski" min="0" max="9">
+    <div class="input-group">
+      <label>Piotroski Score (0-9):</label>
+      <div class="input-container">
+        <input type="number" id="piotroski" min="0" max="9">
+        <div class="tooltip">
+          <button class="info-button">ⓘ</button>
+          <span class="tooltiptext">Piotroski Score (0-9): A financial score that evaluates a company's financial strength. Higher scores (7-9) indicate stronger financial health.</span>
+        </div>
+      </div>
+    </div>
 
-    <label>Altman Z-Score:</label>
-    <input type="number" id="altman" step="0.1">
+    <div class="input-group">
+      <label>Altman Z-Score:</label>
+      <div class="input-container">
+        <input type="number" id="altman" step="0.1">
+        <div class="tooltip">
+          <button class="info-button">ⓘ</button>
+          <span class="tooltiptext">Altman Z-Score: Predicts the likelihood of bankruptcy. Scores above 3.0 indicate low bankruptcy risk, while scores below 1.8 suggest high risk.</span>
+        </div>
+      </div>
+    </div>
 
-    <label>Beta (Volatility):</label>
-    <input type="number" id="beta" step="0.01">
+    <div class="input-group">
+      <label>Beta (Volatility):</label>
+      <div class="input-container">
+        <input type="number" id="beta" step="0.01">
+        <div class="tooltip">
+          <button class="info-button">ⓘ</button>
+          <span class="tooltiptext">Beta: Measures stock volatility compared to the market. Lower beta (<1) means less volatile, higher beta (>1) means more volatile.</span>
+        </div>
+      </div>
+    </div>
 
-    <label>Free Cash Flow (in millions):</label>
-    <input type="number" id="fcf" step="0.1">
+    <div class="input-group">
+      <label>Free Cash Flow (in millions):</label>
+      <div class="input-container">
+        <input type="number" id="fcf" step="0.1">
+        <div class="tooltip">
+          <button class="info-button">ⓘ</button>
+          <span class="tooltiptext">Free Cash Flow: The cash a company generates after accounting for cash outflows. Positive FCF indicates financial strength and flexibility.</span>
+        </div>
+      </div>
+    </div>
 
-    <label>Debt-to-Equity Ratio:</label>
-    <input type="number" id="debt" step="0.01">
+    <div class="input-group">
+      <label>Debt-to-Equity Ratio:</label>
+      <div class="input-container">
+        <input type="number" id="debt" step="0.01">
+        <div class="tooltip">
+          <button class="info-button">ⓘ</button>
+          <span class="tooltiptext">Debt-to-Equity Ratio: Measures financial leverage. Lower ratios (<1) indicate less debt and potentially more stability during crises.</span>
+        </div>
+      </div>
+    </div>
 
     <button id="evaluate">Check Resilience</button>
 
     <div class="result" id="result"></div>
 
     <div class="resources">
-      <p><strong>Where to find these values manually:</strong></p>
+      <p><strong style="font-weight: 900;">Where to find these values manually:</strong></p>
       <ul>
         <li><a href="https://www.screener.in/" target="_blank">Screener.in</a></li>
         <li><a href="https://www.tickertape.in/" target="_blank">Tickertape</a></li>
@@ -62,7 +112,7 @@
 
     <footer class="footer">
       <div class="attribution">
-        <p>Made with ❤️ by Abhinav Gupta</p>
+        <p>Made by Abhinav Gupta</p>
         <div class="social-links">
           <a href="https://www.linkedin.com/in/abhinav-gupta-772972322/" target="_blank" rel="noopener noreferrer">
             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn" width="24" height="24">
@@ -110,6 +160,44 @@
     </style>
   </div>
 
+  <script src="finisher-header.es5.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    new FinisherHeader({
+      "count": 100,
+      "size": {
+        "min": 2,
+        "max": 14,
+        "pulse": 0
+      },
+      "speed": {
+        "x": {
+          "min": 0.1,
+          "max": 0.3
+        },
+        "y": {
+          "min": 0.1,
+          "max": 0.3
+        }
+      },
+      "colors": {
+        "background": "#201e30",
+        "particles": [
+          "#fbfcca",
+          "#d7f3fe",
+          "#ffd0a7"
+        ]
+      },
+      "blending": "overlay",
+      "opacity": {
+        "center": 1,
+        "edge": 0
+      },
+      "skew": -2,
+      "shapes": [
+        "c"
+      ]
+    });
+  </script>
   <script src="stock-fetcher.js"></script>
   <script src="stock-evaluator.js"></script>
 </body>
